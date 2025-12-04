@@ -1,47 +1,74 @@
-# 📊 Previsão de Estoque Inteligente na AWS com [SageMaker Canvas](https://aws.amazon.com/pt/sagemaker/canvas/)
+# 📊 Previsão Inteligente de Estoque com Amazon SageMaker Canvas
 
-Bem-vindo ao desafio de projeto "Previsão de Estoque Inteligente na AWS com SageMaker Canvas. Neste Lab DIO, você aprenderá a usar o SageMaker Canvas para criar previsões de estoque baseadas em Machine Learning (ML). Siga os passos abaixo para completar o desafio!
+Este repositório contém minha solução para o desafio da DIO utilizando o **Amazon SageMaker Canvas** para construir um modelo de previsão de estoque de forma **no-code**.
 
-## 📋 Pré-requisitos
+O objetivo foi treinar um modelo de séries temporais capaz de prever níveis futuros de estoque com base em dados históricos.
 
-Antes de começar, certifique-se de ter uma conta na AWS. Se precisar de ajuda para criar sua conta, confira nosso repositório [AWS Cloud Quickstart](https://github.com/digitalinnovationone/aws-cloud-quickstart).
+---
 
+## 📂 Dataset Utilizado
 
-## 🎯 Objetivos Deste Desafio de Projeto (Lab)
+O dataset contém 500 linhas e 4 colunas:
 
-![image](https://github.com/digitalinnovationone/lab-aws-sagemaker-canvas-estoque/assets/730492/72f5c21f-5562-491e-aa42-2885a3184650)
+- `data` – Data da observação  
+- `quantidade_estoque` – Quantidade disponível no dia  
+- `flag_promocao` – Indica se havia promoção (0/1)  
+- `holiday_br` – Indica feriado nacional  
 
-- Dê um fork neste projeto e reescreva este `README.md`. Sinta-se à vontade para detalhar todo o processo de criação do seu Modelo de ML para uma "Previsão de Estoque Inteligente".
-- Para isso, siga o [passo a passo] descrito a seguir e evolua as suas habilidades em ML no-code com o Amazon SageMaker Canvas.
-- Ao concluir, envie a URL do seu repositório com a solução na plataforma da DIO.
+O dataset foi importado diretamente no SageMaker Canvas.
 
+---
 
-## 🚀 Passo a Passo
+## 🧠 Treinamento do Modelo no SageMaker Canvas
 
-### 1. Selecionar Dataset
+Passos realizados no Canvas:
 
--   Navegue até a pasta `datasets` deste repositório. Esta pasta contém os datasets que você poderá escolher para treinar e testar seu modelo de ML. Sinta-se à vontade para gerar/enriquecer seus próprios datasets, quanto mais você se engajar, mais relevante esse projeto será em seu portfólio.
--   Escolha o dataset que você usará para treinar seu modelo de previsão de estoque.
--   Faça o upload do dataset no SageMaker Canvas.
+1. Importei o dataset na aba **Datasets**.  
+2. Criei um modelo do tipo **Time Series Forecasting**.  
+3. Defini:
+   - **Target:** `QUANTIDADE_ESTOQUE`
+   - **Timestamp:** `data`
+4. Executei o treinamento automático (modo Build).  
+5. Avaliei o desempenho do modelo na aba **Analyze**.  
 
-### 2. Construir/Treinar
+---
 
--   No SageMaker Canvas, importe o dataset que você selecionou.
--   Configure as variáveis de entrada e saída de acordo com os dados.
--   Inicie o treinamento do modelo. Isso pode levar algum tempo, dependendo do tamanho do dataset.
+## 📊 Métricas Obtidas
 
-### 3. Analisar
+O modelo apresentou os seguintes resultados:
 
--   Após o treinamento, examine as métricas de performance do modelo.
--   Verifique as principais características que influenciam as previsões.
--   Faça ajustes no modelo se necessário e re-treine até obter um desempenho satisfatório.
+- **MAPE:** 0.291 (29,1%)  
+- **WAPE:** 0.151 (15,1%)  
+- **RMSE:** 1.527  
+- **MASE:** 0.178  
+- **Avg. WQL:** 0.084  
 
-### 4. Prever
+### 🎯 Interpretação
 
--   Use o modelo treinado para fazer previsões de estoque.
--   Exporte os resultados e analise as previsões geradas.
--   Documente suas conclusões e qualquer insight obtido a partir das previsões.
+- **MAPE 29,1%:** O erro percentual médio é moderado, mas ainda captura bem tendências.  
+- **WAPE 15,1%:** Erro percentual ajustado relativamente baixo.  
+- **RMSE 1.527:** Desvios maiores permanecem sob controle.  
+- **MASE 0.178:** Excelente — o modelo supera com folga o forecast ingênuo.  
 
-## 🤔 Dúvidas?
+📌 *Conclusão:* o modelo se mostra eficiente para séries temporais simples, com bom equilíbrio entre variabilidade e precisão.
 
-Esperamos que esta experiência tenha sido enriquecedora e que você tenha aprendido mais sobre Machine Learning aplicado a problemas reais. Se tiver alguma dúvida, não hesite em abrir uma issue neste repositório ou entrar em contato com a equipe da DIO.
+---
+
+## 🔎 Análise de Impacto das Variáveis
+
+O *Column Impact* identificou:
+
+- `Holiday_BR` → 1.98%  
+- `Flag_promocao` → 0%  
+
+Interpretação:
+
+- Feriados exercem leve influência sobre o comportamento do estoque.  
+- Promoções não impactaram significativamente no conjunto de dados utilizado.
+
+---
+
+## 📉 Limitação Encontrada no AWS Canvas (Erro de Previsão)
+
+Durante a geração de previsões em lote, ocorreu o erro:
+
